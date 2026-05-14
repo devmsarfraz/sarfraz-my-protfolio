@@ -144,4 +144,72 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 4000);
         });
     }
+
+    // Project Carousel Logic
+    const track = document.getElementById('project-track');
+    const dotsContainer = document.getElementById('carousel-dots');
+    if (track && dotsContainer) {
+        const cards = Array.from(track.children);
+        
+        // Create dots
+        cards.forEach((_, index) => {
+            const dot = document.createElement('div');
+            dot.classList.add('dot');
+            if (index === 0) dot.classList.add('active');
+            dot.addEventListener('click', () => {
+                track.scrollTo({
+                    left: cards[index].offsetLeft - track.offsetLeft,
+                    behavior: 'smooth'
+                });
+            });
+            dotsContainer.appendChild(dot);
+        });
+
+        const dots = dotsContainer.querySelectorAll('.dot');
+
+        // Update active dot on scroll
+        track.addEventListener('scroll', () => {
+            let currentIndex = 0;
+            let minDistance = Infinity;
+
+            cards.forEach((card, index) => {
+                const cardLeft = card.offsetLeft - track.offsetLeft;
+                const distance = Math.abs(track.scrollLeft - cardLeft);
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    currentIndex = index;
+                }
+            });
+
+            dots.forEach(dot => dot.classList.remove('active'));
+            if (dots[currentIndex]) {
+                dots[currentIndex].classList.add('active');
+            }
+        });
+
+        // Auto scroller
+        let autoScrollInterval;
+        const startAutoScroll = () => {
+            autoScrollInterval = setInterval(() => {
+                // If we can't scroll further right, go back to start
+                // Math.ceil is used to avoid fractional pixel issues
+                if (Math.ceil(track.scrollLeft + track.clientWidth) >= track.scrollWidth) {
+                    track.scrollTo({ left: 0, behavior: 'smooth' });
+                } else {
+                    // Find the width of one card + gap
+                    const cardWidth = cards[0].offsetWidth;
+                    const gap = parseInt(window.getComputedStyle(track).gap) || 0;
+                    track.scrollBy({ left: cardWidth + gap, behavior: 'smooth' });
+                }
+            }, 5000);
+        };
+
+        const stopAutoScroll = () => clearInterval(autoScrollInterval);
+
+        startAutoScroll();
+        track.addEventListener('mouseenter', stopAutoScroll);
+        track.addEventListener('mouseleave', startAutoScroll);
+        track.addEventListener('touchstart', stopAutoScroll, {passive: true});
+        track.addEventListener('touchend', startAutoScroll);
+    }
 });
