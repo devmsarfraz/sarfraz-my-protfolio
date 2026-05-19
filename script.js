@@ -29,25 +29,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const menuBtn = document.querySelector('.menu-btn');
     const navLinks = document.querySelector('.nav-links');
 
+    const setMenuIcon = (open) => {
+        const iconUse = menuBtn.querySelector('use');
+        if (iconUse) iconUse.setAttribute('href', open ? '#times' : '#bars');
+    };
+
     menuBtn.addEventListener('click', () => {
         navLinks.classList.toggle('active');
-        const icon = menuBtn.querySelector('i');
-        if (navLinks.classList.contains('active')) {
-            icon.classList.remove('fa-bars');
-            icon.classList.add('fa-times');
-        } else {
-            icon.classList.remove('fa-times');
-            icon.classList.add('fa-bars');
-        }
+        setMenuIcon(navLinks.classList.contains('active'));
     });
 
     // Close mobile menu when link is clicked
     document.querySelectorAll('.nav-links a').forEach(link => {
         link.addEventListener('click', () => {
             navLinks.classList.remove('active');
-            const icon = menuBtn.querySelector('i');
-            icon.classList.remove('fa-times');
-            icon.classList.add('fa-bars');
+            setMenuIcon(false);
         });
     });
 
@@ -108,7 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Change button state
             const originalText = submitBtn.innerHTML;
-            submitBtn.innerHTML = 'Sending... <i class="fas fa-spinner fa-spin"></i>';
+            submitBtn.innerHTML = 'Sending... <svg class="icon icon--spin" aria-hidden="true"><use href="#spinner"></use></svg>';
             submitBtn.disabled = true;
 
             try {
@@ -124,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const data = await response.json();
 
                 if (data.success === 'true' || response.ok) {
-                    submitBtn.innerHTML = "Thanks! I'll reach out to you soon <i class='fas fa-check'></i>";
+                    submitBtn.innerHTML = "Thanks! I'll reach out to you soon <svg class=\"icon\" aria-hidden=\"true\"><use href=\"#check\"></use></svg>";
                     submitBtn.style.background = '#10b981'; // Green color for success
                     contactForm.reset();
                 } else {
@@ -132,7 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             } catch (error) {
                 console.error(error);
-                submitBtn.innerHTML = 'Failed to Send <i class="fas fa-times"></i>';
+                submitBtn.innerHTML = 'Failed to Send <svg class="icon" aria-hidden="true"><use href="#times"></use></svg>';
                 submitBtn.style.background = '#ef4444'; // Red color for error
             }
 
