@@ -256,16 +256,10 @@ document.addEventListener('DOMContentLoaded', () => {
         lazyVideos.forEach(loadVideoSource);
     }
 
-    // ClickFit Video Card & Modal Controls
+    // ClickFit Video Play Controls
     const cardVideo = document.getElementById('clickfit-card-video');
     const overlay = document.getElementById('clickfit-overlay');
     const playActionBtn = document.getElementById('clickfit-play-action');
-    const expandActionBtn = document.getElementById('clickfit-expand-action');
-
-    const modal = document.getElementById('video-modal');
-    const modalVideo = document.getElementById('modal-video-player');
-    const modalCloseBtn = document.getElementById('video-modal-close');
-    const modalBackdrop = document.getElementById('video-modal-backdrop');
 
     const playInlineVideo = () => {
         if (!cardVideo) return;
@@ -287,40 +281,4 @@ document.addEventListener('DOMContentLoaded', () => {
     if (playActionBtn) {
         playActionBtn.addEventListener('click', playInlineVideo);
     }
-
-    const openVideoModal = () => {
-        if (!modal || !modalVideo) return;
-        if (cardVideo && !cardVideo.paused) {
-            cardVideo.pause();
-        }
-        loadVideoSource(modalVideo);
-        modal.classList.add('active');
-        modal.setAttribute('aria-hidden', 'false');
-        modalVideo.play().catch(() => {});
-    };
-
-    const closeVideoModal = () => {
-        if (!modal || !modalVideo) return;
-        modalVideo.pause();
-        modal.classList.remove('active');
-        modal.setAttribute('aria-hidden', 'true');
-    };
-
-    if (expandActionBtn) {
-        expandActionBtn.addEventListener('click', openVideoModal);
-    }
-
-    if (modalCloseBtn) {
-        modalCloseBtn.addEventListener('click', closeVideoModal);
-    }
-
-    if (modalBackdrop) {
-        modalBackdrop.addEventListener('click', closeVideoModal);
-    }
-
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && modal && modal.classList.contains('active')) {
-            closeVideoModal();
-        }
-    });
 });
