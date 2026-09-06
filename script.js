@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
             cursor.style.top = e.clientY + 'px';
         });
 
-        const linksAndButtons = document.querySelectorAll('a, button, .skill-tags span');
+        const linksAndButtons = document.querySelectorAll('a, button, .skill-tags span, .video-overlay-preview');
         linksAndButtons.forEach(el => {
             el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
             el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
@@ -185,7 +185,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Auto scroller
         let autoScrollInterval;
+        let isVideoPlaying = false;
+
         const startAutoScroll = () => {
+            if (isVideoPlaying) return;
+            clearInterval(autoScrollInterval);
             autoScrollInterval = setInterval(() => {
                 // If we can't scroll further right, go back to start
                 // Math.ceil is used to avoid fractional pixel issues
@@ -202,10 +206,121 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const stopAutoScroll = () => clearInterval(autoScrollInterval);
 
+        const onVideoPlay = () => {
+            isVideoPlaying = true;
+            stopAutoScroll();
+        };
+
+        const onVideoPauseOrEnd = () => {
+            isVideoPlaying = false;
+            startAutoScroll();
+        };
+
         startAutoScroll();
         track.addEventListener('mouseenter', stopAutoScroll);
         track.addEventListener('mouseleave', startAutoScroll);
         track.addEventListener('touchstart', stopAutoScroll, {passive: true});
         track.addEventListener('touchend', startAutoScroll);
+
+        // Pause auto-scroll when any video plays
+        const allVideos = document.querySelectorAll('video');
+        allVideos.forEach(v => {
+            v.addEventListener('play', onVideoPlay);
+            v.addEventListener('pause', onVideoPauseOrEnd);
+            v.addEventListener('ended', onVideoPauseOrEnd);
+        });
     }
+
+    // Video Lazy Loading Function
+    const loadVideoSource = (video) => {
+        if (!video) return;
+        const source = video.querySelector('source[data-src]');
+        if (!source || source.src) return;
+        source.src = source.dataset.src;
+        video.load();
+    };
+
+    // Lazy load videos when near viewport
+    const lazyVideos = document.querySelectorAll('video[data-lazy]');
+    if ('IntersectionObserver' in window) {
+        const videoObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (!entry.isIntersecting) return;
+                loadVideoSource(entry.target);
+                observer.unobserve(entry.target);
+            });
+        }, { rootMargin: '120px' });
+
+        lazyVideos.forEach(video => videoObserver.observe(video));
+    } else {
+        lazyVideos.forEach(loadVideoSource);
+    }
+
+    // ClickFit Video Card & Modal Controls
+    const cardVideo = document.getElementById('clickfit-card-video');
+    const overlay = document.getElementById('clickfit-overlay');
+    const playActionBtn = document.getElementById('clickfit-play-action');
+    const expandActionBtn = document.getElementById('clickfit-expand-action');
+
+    const modal = document.getElementById('video-modal');
+    const modalVideo = document.getElementById('modal-video-player');
+    const modalCloseBtn = document.getElementById('video-modal-close');
+    const modalBackdrop = document.getElementById('video-modal-backdrop');
+
+    const playInlineVideo = () => {
+        if (!cardVideo) return;
+        loadVideoSource(cardVideo);
+        if (overlay) overlay.classList.add('is-hidden');
+        cardVideo.play().catch(() => {});
+    };
+
+    if (overlay) {
+        overlay.addEventListener('click', playInlineVideo);
+        overlay.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                playInlineVideo();
+            }
+        });
+    }
+
+    if (playActionBtn) {
+        playActionBtn.addEventListener('click', playInlineVideo);
+    }
+
+    const openVideoModal = () => {
+        if (!modal || !modalVideo) return;
+        if (cardVideo && !cardVideo.paused) {
+            cardVideo.pause();
+        }
+        loadVideoSource(modalVideo);
+        modal.classList.add('active');
+        modal.setAttribute('aria-hidden', 'false');
+        modalVideo.play().catch(() => {});
+    };
+
+    const closeVideoModal = () => {
+        if (!modal || !modalVideo) return;
+        modalVideo.pause();
+        modal.classList.remove('active');
+        modal.setAttribute('aria-hidden', 'true');
+    };
+
+    if (expandActionBtn) {
+        expandActionBtn.addEventListener('click', openVideoModal);
+    }
+
+    if (modalCloseBtn) {
+        modalCloseBtn.addEventListener('click', closeVideoModal);
+    }
+
+    if (modalBackdrop) {
+        modalBackdrop.addEventListener('click', closeVideoModal);
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal && modal.classList.contains('active')) {
+            closeVideoModal();
+        }
+    });
 });

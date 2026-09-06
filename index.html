@@ -67,6 +67,8 @@
         <symbol id="paper-plane" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4 20-7z"/></symbol>
         <symbol id="spinner" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></symbol>
         <symbol id="check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></symbol>
+        <symbol id="play" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></symbol>
+        <symbol id="expand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></symbol>
     </svg>
     <div class="cursor"></div>
 
@@ -95,7 +97,7 @@
                     workflows.</p>
                 <div class="hero-cta">
                     <a href="#contact" class="btn btn-primary">Hire Me <svg class="icon" aria-hidden="true"><use href="#arrow-right"></use></svg></a>
-                    <a href="Muhammad_Sarfraz_Nawaz_CV.pdf" class="btn btn-secondary" download target="_blank"
+                    <a href="MuhammadSarfrazNawaz.pdf" class="btn btn-secondary" download target="_blank"
                         rel="noopener noreferrer">Download CV <svg class="icon" aria-hidden="true"><use href="#download"></use></svg></a>
                 </div>
             </div>
@@ -252,9 +254,29 @@
             </div>
             <div class="carousel-container">
                 <div class="carousel-track" id="project-track">
+                    <div class="project-card glass-card" id="project-clickfit">
+                        <div class="project-img-container">
+                            <video id="clickfit-card-video" data-lazy class="project-card-video"
+                                poster="assets/images/projects_images/clickFit.png" preload="none" playsinline controls>
+                                <source data-src="assets/images/projects_images/ClickFit.mp4" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                            <div class="project-overlay" id="clickfit-overlay" aria-label="Play ClickFit Video" role="button" tabindex="0">
+                                <button class="view-btn play-btn" id="clickfit-play-btn" aria-label="Play Video" tabindex="-1">
+                                    <svg class="icon" aria-hidden="true"><use href="#play"></use></svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="project-info">
+                            <span class="project-category">Full Stack &amp; UI/UX</span>
+                            <h3>ClickFit</h3>
+                            <p>An interactive fitness and gym management platform designed for workout programs, class scheduling, and member engagement. Engineered with high-performance responsive media and clean modern design.</p>
+                            <button type="button" class="btn btn-primary btn-small" id="clickfit-play-action">Play <svg class="icon" aria-hidden="true"><use href="#play"></use></svg></button>
+                        </div>
+                    </div>
                     <div class="project-card glass-card">
                         <div class="project-img-container">
-                            <img src="assets/images/projects_images/360marketingtool.png" alt="360 Marketing Tool">
+                            <img src="assets/images/projects_images/360marketingtool.png" alt="360 Marketing Tool" loading="lazy">
                             <div class="project-overlay">
                                 <a href="https://360marketingtool.com/" class="view-btn" target="_blank"
                                     rel="noopener noreferrer" aria-label="View 360 Marketing Tool Project"
@@ -275,7 +297,7 @@
                     </div>
                     <div class="project-card glass-card">
                         <div class="project-img-container">
-                            <img src="assets/images/projects_images/dss.fooster.png" alt="dss.fosterwebmarketing">
+                            <img src="assets/images/projects_images/dss.fooster.png" alt="dss.fosterwebmarketing" loading="lazy">
                             <div class="project-overlay">
                                 <a href="https://dss.fosterwebmarketing.com/access/login.cfm?ref=/frontpage/index.cfm?"
                                     class="view-btn" target="_blank" rel="noopener noreferrer"><svg class="icon" aria-hidden="true"><use href="#link"></use></svg></a>
@@ -297,7 +319,7 @@
                     </div>
                     <div class="project-card glass-card">
                         <div class="project-img-container">
-                            <img src="assets/images/projects_images/carmelsolutions.png" alt="Carmel Solutions">
+                            <img src="assets/images/projects_images/carmelsolutions.png" alt="Carmel Solutions" loading="lazy">
                             <div class="project-overlay">
                                 <a href="https://carmelsolutions.com/" class="view-btn" target="_blank"
                                     rel="noopener noreferrer"><svg class="icon" aria-hidden="true"><use href="#link"></use></svg></a>
@@ -317,7 +339,7 @@
                     </div>
                     <div class="project-card glass-card">
                         <div class="project-img-container">
-                            <img src="assets/images/projects_images/crmSupreme.png" alt="CRM Supreme">
+                            <img src="assets/images/projects_images/crmSupreme.png" alt="CRM Supreme" loading="lazy">
                             <div class="project-overlay">
                                 <a href="https://crmsupreme.com/" class="view-btn" target="_blank"
                                     rel="noopener noreferrer"><svg class="icon" aria-hidden="true"><use href="#link"></use></svg></a>
@@ -385,9 +407,7 @@
                     </div>
                 </div>
                 <form class="contact-form glass-card" id="contact-form">
-                    <!-- Honeypot to prevent spam -->
                     <input type="text" name="_honey" style="display:none">
-                    <!-- Disable FormSubmit captcha for a smoother UX -->
                     <input type="hidden" name="_captcha" value="false">
 
                     <div class="form-group">
@@ -414,7 +434,7 @@
     </main>
 
     <footer>
-        <p>&copy; 2026 Muhammad Sarfraz Nawaz. All rights reserved.</p>
+        <p>&copy; 2024 Muhammad Sarfraz Nawaz. All rights reserved.</p>
     </footer>
 
     <script src="script.js" defer></script>
